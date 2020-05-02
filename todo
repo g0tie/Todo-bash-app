@@ -21,7 +21,7 @@ fi
 
 if [ -z "$1" ]
 then
-	echo "To see commands available commandes, type: ./todo --help"
+	echo "To see available commands, type: ./todo --help"
 fi
 
 if [ "$1" == "--help" ] 
