@@ -1,0 +1,84 @@
+#!/bin/bash
+
+touch todo.txt
+nbLines=`wc -l < todo.txt`
+cmds=("" "--help" "show" "add" "done" "clear")
+cpt=0
+
+for i in "${cmds[@]}"
+do
+	if [ "$1" == "$i" ]
+	then
+		cpt=$((cpt+1))
+	fi
+done
+
+if [ "$cpt" -eq 0 ]
+then
+	echo "Unknow command"
+	echo "use --help to show commands available"
+fi
+
+if [ -z "$1" ]
+then
+	echo "To see commands available commandes, type: ./todo --help"
+fi
+
+if [ "$1" == "--help" ] 
+then 
+	echo ""
+	echo "This a simple Todo list CLI application written in Bash"
+	echo ""
+	echo "usage : ./todo [command]"
+	echo ""
+	echo "COMMANDS:"
+	echo ""
+	echo "show		Show the list"
+	echo "add <entry>	Add the specify entry to the list"
+	echo "done <line> 	Confirm the end of a task at the specified line"
+	echo "clear		Clear the list" 
+fi
+
+if [ "$1" == "show" ]
+then
+	echo "Here is your list :"
+	echo ''
+	cat todo.txt
+fi
+
+if [ "$1" == "add" ]
+then
+	if [ -z "${*:2}" ]
+	then
+		echo "You must add something"
+	else
+		i=$((nbLines+1))
+		a=$i
+		b=') '
+		c="${@:2}"
+		result="${a} ${b} ${c}"
+
+		echo $result >> todo.txt
+		./todo show
+	fi	
+fi
+
+if [ "$1" == "done" ]
+then
+	if [ -z "$2" ]
+	then
+		echo "You must select which line you want to mark"
+	else
+		 sed -i "/$2/ s/$/ DONE/" todo.txt
+		 ./todo show
+	fi
+fi
+
+if [ "$1" == "clear" ]
+then
+	rm todo.txt
+	touch todo.txt
+	echo "Todo board is clear"
+	echo "Run add command to add something"
+fi
+
